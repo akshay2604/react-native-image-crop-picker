@@ -99,7 +99,7 @@ public class PickerModule extends ReactContextBaseJavaModule implements Activity
         width = options.hasKey("width") ? options.getInt("width") : width;
         height = options.hasKey("height") ? options.getInt("height") : height;
         cropping = options.hasKey("cropping") ? options.getBoolean("cropping") : cropping;
-        circular = options.hasKey("circular") ? options.getBoolean("circular") : cropping;
+        circular = options.hasKey("circular") ? options.getBoolean("circular") : circular;
     }
 
     private void deleteRecursive(File fileOrDirectory) {
