@@ -21,7 +21,8 @@ Call single image picker with cropping
 ImagePicker.openPicker({
   width: 300,
   height: 400,
-  cropping: true
+  cropping: true,
+  circular: false
 }).then(image => {
   console.log(image);
 });
@@ -41,7 +42,8 @@ ImagePicker.openPicker({
 ImagePicker.openCamera({
   width: 300,
   height: 400,
-  cropping: true
+  cropping: true,
+  circular: false
 }).then(image => {
   console.log(image);
 });
