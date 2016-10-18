@@ -37,6 +37,7 @@ RCT_EXPORT_MODULE();
     if (self = [super init]) {
         self.defaultOptions = @{
                                 @"multiple": @NO,
+                                @"circular": @NO,
                                 @"cropping": @NO,
                                 @"includeBase64": @NO,
                                 @"compressVideo": @YES,
@@ -497,18 +498,20 @@ RCT_EXPORT_METHOD(openPicker:(NSDictionary *)options
 // Returns a custom rect for the mask.
 - (CGRect)imageCropViewControllerCustomMaskRect:
 (RSKImageCropViewController *)controller {
-    CGSize maskSize = CGSizeMake(
-                                 [[self.options objectForKey:@"width"] intValue],
-                                 [[self.options objectForKey:@"height"] intValue]);
+     CGSize maskSize = CGSizeMake(
+                                  [[self.options objectForKey:@"width"] intValue],
+                                  [[self.options objectForKey:@"height"] intValue]);
 
-    CGFloat viewWidth = CGRectGetWidth(controller.view.frame);
-    CGFloat viewHeight = CGRectGetHeight(controller.view.frame);
+     CGFloat viewWidth = CGRectGetWidth(controller.view.frame);
+     CGFloat viewHeight = CGRectGetHeight(controller.view.frame);
 
-    CGRect maskRect = CGRectMake((viewWidth - maskSize.width) * 0.5f,
-                                 (viewHeight - maskSize.height) * 0.5f,
-                                 maskSize.width, maskSize.height);
-
-    return maskRect;
+     CGRect maskRect = CGRectMake((viewWidth - maskSize.width) * 0.5f,
+                                  (viewHeight - maskSize.height) * 0.5f,
+                                  maskSize.width, maskSize.height);
+//
+//    return CGRectMake(0, 0, 250, 250);
+//
+     return maskRect;
 }
 
 // if provided width or height is bigger than screen w/h,
@@ -531,10 +534,20 @@ RCT_EXPORT_METHOD(openPicker:(NSDictionary *)options
 - (UIBezierPath *)imageCropViewControllerCustomMaskPath:
 (RSKImageCropViewController *)controller {
     CGRect rect = [self scaleRect:controller];
-    UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect
-                                               byRoundingCorners:UIRectCornerAllCorners
-                                                     cornerRadii:CGSizeMake(0, 0)];
+    UIBezierPath *path;
+    if ([[[self options] objectForKey:@"circular"] boolValue]) {
+        path = [UIBezierPath bezierPathWithRoundedRect:rect
+                                                   byRoundingCorners:UIRectCornerAllCorners
+                                                         cornerRadii:CGSizeMake([[self.options objectForKey:@"width"] intValue], [[self.options objectForKey:@"height"] intValue])];
+    } else {
+            path = [UIBezierPath bezierPathWithRoundedRect:rect
+                                                       byRoundingCorners:UIRectCornerAllCorners
+                                                             cornerRadii:CGSizeMake(0, 0)];
+        
+    }
+    
     return path;
+    
 }
 
 // Returns a custom rect in which the image can be moved.
