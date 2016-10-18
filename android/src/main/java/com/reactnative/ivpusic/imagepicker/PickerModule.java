@@ -64,6 +64,7 @@ public class PickerModule extends ReactContextBaseJavaModule implements Activity
     private Promise mPickerPromise;
 
     private boolean cropping = false;
+    private boolean circular = false;
     private boolean multiple = false;
     private boolean includeBase64 = false;
     private int width = 200;
@@ -98,6 +99,7 @@ public class PickerModule extends ReactContextBaseJavaModule implements Activity
         width = options.hasKey("width") ? options.getInt("width") : width;
         height = options.hasKey("height") ? options.getInt("height") : height;
         cropping = options.hasKey("cropping") ? options.getBoolean("cropping") : cropping;
+        circular = options.hasKey("circular") ? options.getBoolean("circular") : cropping;
     }
 
     private void deleteRecursive(File fileOrDirectory) {
@@ -432,7 +434,9 @@ public class PickerModule extends ReactContextBaseJavaModule implements Activity
     public void startCropping(Activity activity, Uri uri) {
         UCrop.Options options = new UCrop.Options();
         options.setCompressionFormat(Bitmap.CompressFormat.JPEG);
-
+        if(circular) {
+            options.setOvalDimmedLayer(true);
+        }
         UCrop.of(uri, Uri.fromFile(new File(this.getTmpDir(), UUID.randomUUID().toString() + ".jpg")))
                 .withMaxResultSize(width, height)
                 .withAspectRatio(width, height)
