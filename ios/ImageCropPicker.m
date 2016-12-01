@@ -380,7 +380,7 @@ RCT_EXPORT_METHOD(openPicker:(NSDictionary *)options
                      options:options
                      resultHandler:^(NSData *imageData, NSString *dataUTI, UIImageOrientation orientation, NSDictionary *info) {
                          UIImage *image = [UIImage imageWithData:imageData];
-                         NSData *data = UIImageJPEGRepresentation(image, 1);
+                         NSData *data = UIImagePNGRepresentation(image);
 
                          NSString *filePath = [self persistFile:data];
                          if (filePath == nil) {
@@ -393,7 +393,7 @@ RCT_EXPORT_METHOD(openPicker:(NSDictionary *)options
                          [selections addObject:[self createAttachmentResponse:filePath
                                                                     withWidth:@(phAsset.pixelWidth)
                                                                    withHeight:@(phAsset.pixelHeight)
-                                                                     withMime:@"image/jpeg"
+                                                                     withMime:@"image/png"
                                                                      withSize:[NSNumber numberWithUnsignedInteger:data.length]
                                                                      withData:[[self.options objectForKey:@"includeBase64"] boolValue] ? [data base64EncodedStringWithOptions:0] : [NSNull null]
                                                 ]];
@@ -474,7 +474,7 @@ RCT_EXPORT_METHOD(openPicker:(NSDictionary *)options
             });
         }];
     } else {
-        NSData *data = UIImageJPEGRepresentation(image, 1);
+        NSData *data = UIImagePNGRepresentation(image);
         NSString *filePath = [self persistFile:data];
         if (filePath == nil) {
             self.reject(ERROR_CANNOT_SAVE_IMAGE_KEY, ERROR_CANNOT_SAVE_IMAGE_MSG, nil);
@@ -485,7 +485,7 @@ RCT_EXPORT_METHOD(openPicker:(NSDictionary *)options
         self.resolve([self createAttachmentResponse:filePath
                                           withWidth:@(image.size.width)
                                          withHeight:@(image.size.height)
-                                           withMime:@"image/jpeg"
+                                           withMime:@"image/png"
                                            withSize:[NSNumber numberWithUnsignedInteger:data.length]
                                            withData:[[self.options objectForKey:@"includeBase64"] boolValue] ? [data base64EncodedStringWithOptions:0] : [NSNull null]]);
 
@@ -574,7 +574,7 @@ RCT_EXPORT_METHOD(openPicker:(NSDictionary *)options
     // so resize image
     CGSize resizedImageSize = CGSizeMake([[[self options] objectForKey:@"width"] intValue], [[[self options] objectForKey:@"height"] intValue]);
     UIImage *resizedImage = [croppedImage resizedImageToFitInSize:resizedImageSize scaleIfSmaller:YES];
-    NSData *data = UIImageJPEGRepresentation(resizedImage, 1);
+    NSData *data = UIImagePNGRepresentation(resizedImage);
 
     NSString *filePath = [self persistFile:data];
     if (filePath == nil) {
@@ -586,7 +586,7 @@ RCT_EXPORT_METHOD(openPicker:(NSDictionary *)options
     self.resolve([self createAttachmentResponse:filePath
                                       withWidth:@(resizedImage.size.width)
                                      withHeight:@(resizedImage.size.height)
-                                       withMime:@"image/jpeg"
+                                       withMime:@"image/png"
                                        withSize:[NSNumber numberWithUnsignedInteger:data.length]
                                        withData:[[self.options objectForKey:@"includeBase64"] boolValue] ? [data base64EncodedStringWithOptions:0] : [NSNull null]]);
 
@@ -599,7 +599,7 @@ RCT_EXPORT_METHOD(openPicker:(NSDictionary *)options
     // create temp file
     NSString *tmpDirFullPath = [self getTmpDirectory];
     NSString *filePath = [tmpDirFullPath stringByAppendingString:[[NSUUID UUID] UUIDString]];
-    filePath = [filePath stringByAppendingString:@".jpg"];
+    filePath = [filePath stringByAppendingString:@".png"];
 
     // save cropped file
     BOOL status = [data writeToFile:filePath atomically:YES];
