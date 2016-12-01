@@ -433,10 +433,10 @@ public class PickerModule extends ReactContextBaseJavaModule implements Activity
 
     public void startCropping(Activity activity, Uri uri) {
         UCrop.Options options = new UCrop.Options();
-        options.setCompressionFormat(Bitmap.CompressFormat.JPEG);
+        options.setCompressionFormat(Bitmap.CompressFormat.PNG);
         options.setOvalDimmedLayer(circular);
 
-        UCrop.of(uri, Uri.fromFile(new File(this.getTmpDir(), UUID.randomUUID().toString() + ".jpg")))
+        UCrop.of(uri, Uri.fromFile(new File(this.getTmpDir(), UUID.randomUUID().toString() + ".png")))
                 .withMaxResultSize(width, height)
                 .withAspectRatio(width, height)
                 .withOptions(options)
@@ -507,7 +507,7 @@ public class PickerModule extends ReactContextBaseJavaModule implements Activity
 
             if (cropping) {
                 UCrop.Options options = new UCrop.Options();
-                options.setCompressionFormat(Bitmap.CompressFormat.JPEG);
+                options.setCompressionFormat(Bitmap.CompressFormat.PNG);
                 startCropping(activity, uri);
             } else {
                 try {
